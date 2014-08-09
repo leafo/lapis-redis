@@ -1,8 +1,9 @@
 
 # `lapis-redis`
 
-This module is used for integrating Redis with Lapis. It uses the `resty-redis`
-module.
+This module is used for integrating [Redis](http://redis.io) with
+[Lapis](http://leafo.net/lapis). It uses the
+[`lua-resty-redis`](https://github.com/openresty/lua-resty-redis) module.
 
 ## Installing
 
@@ -25,10 +26,14 @@ config "development", ->
 
 ## Connecting
 
-You should only call `get_redis` within an action's request cycle. The Redis
-connection will automatically be recycled at the end of the request.
+The function `get_redis` can be used to get the current request's Redis
+connection. If there's not connection established for the request a new one
+will be opened. After the request completes the Redis connection will
+automatically be recycled for future requests.
 
-The return value is a connected `resty-redis` object.
+The return value of `get_redis` is a connected
+[`lua-resty-redis`](https://github.com/openresty/lua-resty-redis#methods)
+object.
 
 ```moon
 import get_redis from require "lapis.redis"
@@ -44,7 +49,8 @@ class App extends lapis.Application
 
 ## Redis cache
 
-You can use Redis as a cahe using the Lapis caching API.
+You can use Redis as a cache using the [Lapis caching
+API](http://leafo.net/lapis/reference/utilities.html#caching-cachedfn_or_tbl).
 
 ```moon
 import cached from require "lapis.cache"
