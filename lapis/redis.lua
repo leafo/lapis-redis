@@ -22,10 +22,10 @@ end
 local get_redis
 get_redis = function()
   if not (redis) then
-    return 
+    return nil, "missing redis library"
   end
   if redis_down and redis_down + 60 > ngx.time() then
-    return 
+    return nil, "redis down"
   end
   local r = ngx.ctx.redis
   if not (r) then
@@ -36,13 +36,14 @@ get_redis = function()
     end
     local err
     r, err = connect_redis()
-    if r then
-      ngx.ctx.redis = r
-      after_dispatch(function()
-        r:set_keepalive()
-        ngx.ctx.redis = nil
-      end)
+    if not (r) then
+      return nil, err
     end
+    ngx.ctx.redis = r
+    after_dispatch(function()
+      r:set_keepalive()
+      ngx.ctx.redis = nil
+    end)
   end
   return r
 end

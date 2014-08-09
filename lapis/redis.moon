@@ -17,20 +17,20 @@ connect_redis = ->
     ok, err
 
 get_redis = ->
-  return unless redis
-  return if redis_down and redis_down + 60 > ngx.time!
+  return nil, "missing redis library" unless redis
+  return nil, "redis down" if redis_down and redis_down + 60 > ngx.time!
 
   r = ngx.ctx.redis
   unless r
     import after_dispatch from require "lapis.nginx.context"
 
     r, err = connect_redis!
+    return nil, err unless r
 
-    if r
-      ngx.ctx.redis = r
-      after_dispatch ->
-        r\set_keepalive!
-        ngx.ctx.redis = nil
+    ngx.ctx.redis = r
+    after_dispatch ->
+      r\set_keepalive!
+      ngx.ctx.redis = nil
 
   r
 
