@@ -1,5 +1,5 @@
 
-# Lapis redis support
+# `lapis-redis`
 
 This module is used for integrating Redis with Lapis. It uses the `resty-redis`
 module.
