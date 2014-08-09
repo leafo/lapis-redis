@@ -6,11 +6,12 @@ end
 local redis_down = nil
 local connect_redis
 connect_redis = function()
-  if not (config.redis_host) then
-    return nil
+  local redis_config = config.redis
+  if not (redis_config) then
+    return nil, "redis not configured"
   end
   local r = redis:new()
-  local ok, err = r:connect(config.redis_host, config.redis_port)
+  local ok, err = r:connect(redis_config.host, redis_config.port)
   if ok then
     return r
   else

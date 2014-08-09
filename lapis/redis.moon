@@ -4,11 +4,12 @@ redis = if ngx then require "resty.redis"
 redis_down = nil
 
 connect_redis = ->
-  return nil unless config.redis_host
+  redis_config = config.redis
+  return nil, "redis not configured" unless redis_config
 
   r = redis\new!
-  ok, err = r\connect config.redis_host,
-    config.redis_port
+  ok, err = r\connect redis_config.host, redis_config.port
+
   if ok
     r
   else

@@ -16,8 +16,11 @@ $ luarocks install lapis-redis
 -- config.moon
 
 config "development", ->
-  redis_host "127.0.0.1"
-  redis_port 6379
+  redis {
+    host: "127.0.0.1"
+    port: 6379
+  }
+
 ```
 
 ## Connecting
