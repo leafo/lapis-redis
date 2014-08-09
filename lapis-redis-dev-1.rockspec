@@ -19,6 +19,7 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
+    ["lapis.redis"] = "lapis/redis.lua",
   }
 }
 
