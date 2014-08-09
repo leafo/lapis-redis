@@ -7,7 +7,7 @@ module.
 ## Installing
 
 ```bash
-$ luarocks install laips-redis
+$ luarocks install lapis-redis
 ```
 
 ## Configuring
