@@ -46,6 +46,38 @@ class App extends lapis.Application
     redis\get "hello"
 ```
 
+## Alternate Configurations
+```moons
+-- config.moon
+
+config "development", ->
+  redis {
+    host: "127.0.0.1"
+    port: 6379
+    slave: {
+        host: "127.0.0.1"
+        port: 6380
+    }
+  }
+```
+
+## Connecting to alternate configurations
+
+The function `get_redis` accepts an alternate 'named configuration'.
+Simply call `get_redis('named_config')`.
+
+```moon
+import get_redis from require "lapis.redis"
+
+class App extends lapis.Application
+  "/write": =>
+    redis = get_redis!
+    redis\set "hello", "world"
+
+  "/read": =>
+    redis = get_redis('slave')
+    redis\get "hello"
+```
 
 ## Redis cache
 
@@ -65,3 +97,5 @@ class App extends lapis.Application
   }
 ```
 
+Note, [Lapis caching
+API](http://leafo.net/lapis/reference/utilities.html#caching-cachedfn_or_tbl) does not currently accept named connections. 
