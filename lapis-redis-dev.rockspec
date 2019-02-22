@@ -1,14 +1,14 @@
 package = "lapis-redis"
-version = "dev-1"
+version = "dev-2"
 
 source = {
-  url = "git://github.com/leafo/lapis-redis.git"
+  url = "git://github.com/lwhile/lapis-redis.git"
 }
 
 description = {
   summary = "Redis integration with lapis",
   license = "MIT",
-  maintainer = "Leaf Corcoran <leafot@gmail.com>",
+  maintainer = "lwhile <lwhile521@gmail.com>",
 }
 
 dependencies = {
