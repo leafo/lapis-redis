@@ -11,6 +11,7 @@ connect_redis = function()
     return nil, "redis not configured"
   end
   local r = redis:new()
+  r:set_timeout(redis_config.timeout)
   local ok, err = r:connect(redis_config.host, redis_config.port)
   if ok then
     return r
@@ -30,10 +31,7 @@ get_redis = function()
   local r = ngx.ctx.redis
   if not (r) then
     local after_dispatch
-    do
-      local _obj_0 = require("lapis.nginx.context")
-      after_dispatch = _obj_0.after_dispatch
-    end
+    after_dispatch = require("lapis.nginx.context").after_dispatch
     local err
     r, err = connect_redis()
     if not (r) then

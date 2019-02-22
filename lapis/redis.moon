@@ -8,6 +8,7 @@ connect_redis = ->
   return nil, "redis not configured" unless redis_config
 
   r = redis\new!
+  r\set_timeout redis_config.timeout
   ok, err = r\connect redis_config.host, redis_config.port
 
   if ok
