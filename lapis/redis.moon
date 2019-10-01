@@ -1,5 +1,6 @@
 config = require"lapis.config".get!
-redis = if ngx then require "resty.redis"
+redis = if ngx and ngx.socket
+  require "resty.redis"
 
 redis_down = nil
 

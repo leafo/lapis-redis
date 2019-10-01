@@ -1,6 +1,6 @@
 local config = require("lapis.config").get()
 local redis
-if ngx then
+if ngx and ngx.socket then
   redis = require("resty.redis")
 end
 local redis_down = nil
@@ -30,10 +30,7 @@ get_redis = function()
   local r = ngx.ctx.redis
   if not (r) then
     local after_dispatch
-    do
-      local _obj_0 = require("lapis.nginx.context")
-      after_dispatch = _obj_0.after_dispatch
-    end
+    after_dispatch = require("lapis.nginx.context").after_dispatch
     local err
     r, err = connect_redis()
     if not (r) then
