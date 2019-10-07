@@ -5,8 +5,16 @@ if ngx and ngx.socket then
 end
 local redis_down = nil
 local connect_redis
-connect_redis = function()
-  local redis_config = config.redis
+connect_redis = function(confKey)
+  if confKey == nil then
+    confKey = nil
+  end
+  local redis_config
+  if confKey ~= nil then
+    redis_config = config.redis[confKey]
+  else
+    redis_config = config.redis
+  end
   if not (redis_config) then
     return nil, "redis not configured"
   end
@@ -20,14 +28,26 @@ connect_redis = function()
   end
 end
 local get_redis
-get_redis = function()
+get_redis = function(confKey)
+  if confKey == nil then
+    confKey = nil
+  end
   if not (redis) then
     return nil, "missing redis library"
   end
   if redis_down and redis_down + 60 > ngx.time() then
     return nil, "redis down"
   end
-  local r = ngx.ctx.redis
+  local r
+  if confKey then
+    if ngx.ctx.redisClients ~= nil then
+      r = ngx.ctx.redisClients[confKey]
+    else
+      r = nil
+    end
+  else
+    r = ngx.ctx.redis
+  end
   if not (r) then
     local after_dispatch
     after_dispatch = require("lapis.nginx.context").after_dispatch
@@ -36,10 +56,22 @@ get_redis = function()
     if not (r) then
       return nil, err
     end
-    ngx.ctx.redis = r
+    if not confKey then
+      ngx.ctx.redis = r
+    else
+      if not ngx.ctx.redisClients then
+        ngx.ctx.redisClients = { }
+      end
+      ngx.ctx.redisClients[confKey] = r
+    end
     after_dispatch(function()
       r:set_keepalive()
-      ngx.ctx.redis = nil
+      if not confKey then
+        ngx.ctx.redis = nil
+      end
+      if confKey then
+        ngx.ctx.redisClients[confKey] = nil
+      end
     end)
   end
   return r
