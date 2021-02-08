@@ -4,6 +4,8 @@ redis = if ngx and ngx.socket
 
 redis_down = nil
 
+VERSION = "1.0.0"
+
 connect_redis = ->
   redis_config = config.redis
   return nil, "redis not configured" unless redis_config
@@ -53,5 +55,5 @@ redis_cache = (prefix) ->
     }
 
 
-{ :get_redis, :redis_cache }
+{ :get_redis, :redis_cache, :VERSION }
 

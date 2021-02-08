@@ -4,6 +4,7 @@ if ngx and ngx.socket then
   redis = require("resty.redis")
 end
 local redis_down = nil
+local VERSION = "1.0.0"
 local connect_redis
 connect_redis = function()
   local redis_config = config.redis
@@ -73,5 +74,6 @@ redis_cache = function(prefix)
 end
 return {
   get_redis = get_redis,
-  redis_cache = redis_cache
+  redis_cache = redis_cache,
+  VERSION = VERSION
 }
